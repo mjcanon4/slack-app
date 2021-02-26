@@ -2,15 +2,36 @@ import React from "react";
 import styled from "styled-components";
 import StarBorderOutlinedIcon from "@material-ui/icons/StarBorderOutlined";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import ChatInput from "./ChatInput";
+import { selectRoomId } from "../features/appSlice";
+import { useSelector } from "react-redux";
+import { useDocument, useCollection } from "react-firebase-hooks/firestore";
+import { db } from "../firebase";
 
 function Chat() {
+  const roomId = useSelector(selectRoomId);
+  const [roomDetails] = useDocument(
+    roomId && db.collection("rooms").doc(roomId)
+  );
+  const [roomMessages] = useCollection(
+    roomId &&
+      db
+        .collection("rooms")
+        .doc(roomId)
+        .collection("messages")
+        .orderBy("timestamp", "asc")
+  );
+
+  console.log(roomDetails?.data().name);
+  console.log(roomMessages);
+
   return (
     <ChatContainer>
       <>
         <Header>
           <HeaderLeft>
             <h4>
-              <strong>#Room Name</strong>
+              <strong>#{roomDetails?.data().name}</strong>
             </h4>
             <StarBorderOutlinedIcon />
           </HeaderLeft>
@@ -21,7 +42,7 @@ function Chat() {
           </HeaderRight>
         </Header>
 
-        <ChatMessages>{/* Messages go here */}</ChatMessages>
+        <ChatInput channelName={roomDetails?.data()} channelId={roomId} />
       </>
     </ChatContainer>
   );
@@ -72,4 +93,4 @@ const HeaderRight = styled.div`
   }
 `;
 
-const ChatContainer = styled.div``;
+const ChatMessages = styled.div``;
