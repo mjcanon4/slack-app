@@ -1,15 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "@material-ui/core/Button";
 import { db } from "../firebase";
 import firebase from "firebase";
-import { selectRoomId } from "../features/appSlice";
-import { useSelector } from "react-redux";
-import { useDocument, useCollection } from "react-firebase-hooks/firestore";
-import Chat from "./Chat";
 
 function ChatInput(channelName, channelId) {
   const [input, setInput] = useState("");
+
   const sendMessage = (e) => {
     e.preventDefault(); // prevents refresh
 
@@ -21,9 +18,11 @@ function ChatInput(channelName, channelId) {
       message: input,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       user: "Michael Canon",
+      userImage:
+        "https://media-exp1.licdn.com/dms/image/C4D03AQFCsQf4MV6l1Q/profile-displayphoto-shrink_800_800/0/1598564472862?e=1619654400&v=beta&t=Wtumk2kw2VHmBnc9tw5k_sZO_UhZ19pE_RK23lf6T1c",
     });
 
-    setInput("");
+    setInput(" ");
   };
 
   return (

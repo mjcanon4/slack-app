@@ -7,6 +7,7 @@ import { selectRoomId } from "../features/appSlice";
 import { useSelector } from "react-redux";
 import { useDocument, useCollection } from "react-firebase-hooks/firestore";
 import { db } from "../firebase";
+import Message from "./Message";
 
 function Chat() {
   const roomId = useSelector(selectRoomId);
@@ -41,6 +42,14 @@ function Chat() {
             </p>
           </HeaderRight>
         </Header>
+
+        <Message>
+          {roomMessages?.docs.map((doc) => {
+            const { message, timestamp, user, userImage } = doc.data();
+
+            return <Message />;
+          })}
+        </Message>
 
         <ChatInput channelName={roomDetails?.data()} channelId={roomId} />
       </>
